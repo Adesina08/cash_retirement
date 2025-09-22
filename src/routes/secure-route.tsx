@@ -17,7 +17,7 @@ export function RequireRole({ roles, children }: RequireRoleProps) {
   }
 
   if (!user) {
-    return <Navigate to="/advances" state={{ from: location }} replace />;
+    return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
   if (!roles.includes(user.role)) {

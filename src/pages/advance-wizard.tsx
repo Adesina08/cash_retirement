@@ -9,7 +9,7 @@ import { Input } from '@components/ui/input';
 import { Textarea } from '@components/ui/textarea';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@components/ui/form';
 import { PolicyAlert } from '@features/policies/policy-alert';
-import { ReceiptViewer } from '@features/advances/receipt-viewer';
+import { ReceiptUploadInput } from '@features/advances/receipt-upload';
 import { useAuth } from '@features/auth/auth-context';
 import { useDataClient } from '@lib/data';
 import { Advance } from '@lib/types';
@@ -416,17 +416,22 @@ function AdvanceRetirementForm() {
                     <FormItem>
                       <FormLabel>Receipt upload</FormLabel>
                       <FormControl>
-                        <Input
-                          type="url"
-                          placeholder="Paste receipt URL (stub for upload)"
-                          value={field.value ?? ''}
-                          onChange={(event) => field.onChange(event.target.value)}
+                        <ReceiptUploadInput
+                          value={field.value ?? undefined}
+                          onChange={(value) => field.onChange(value ?? undefined)}
+                          onTextExtracted={(text) => {
+                            const normalized = text.trim();
+                            if (!normalized) return;
+                            const current = form.getValues(`items.${index}.description` as const);
+                            if (!current || current.length < 4) {
+                              form.setValue(`items.${index}.description` as const, normalized.slice(0, 240));
+                            }
+                          }}
                         />
                       </FormControl>
                       <FormDescription>
-                        Uploads go through anti-malware scanning before storing receipts securely.
+                        Uploads are scanned, stored securely, and automatically analysed for quick transcription.
                       </FormDescription>
-                      <ReceiptViewer url={field.value ?? undefined} />
                       <FormMessage />
                     </FormItem>
                   )}

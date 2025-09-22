@@ -1,0 +1,9 @@
+node_modules
+.vscode
+.DS_Store
+dist
+seed-data.json
+playwright-report
+tsconfig.*.tsbuildinfo
+vite.config.d.ts
+vite.config.js
